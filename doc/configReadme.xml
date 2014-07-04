@@ -22,7 +22,7 @@ To make this Anypoint Template run, there are certain preconditions that must be
 		</section>
 		<section id="running_on_cloudhub">
 <![CDATA[
-Once your app is all set and started, supposing you choose as domain name `template-sfdc2sieb-contact-aggregation` to trigger the use case you just need to hit `http://template-sfdc2sieb-contact-aggregation.cloudhub.io/synccontacts` and report will be sent to the emails configured.
+Once your app is all set and started, supposing you choose as domain name `template-sfdc2sieb-contact-aggregation` to trigger the use case you just need to hit `http://template-sfdc2sieb-contact-aggregation.cloudhub.io/generatereport` and report will be sent to the emails configured.
 ]]>
 		</section>
 		<section id="running_on_standalone">

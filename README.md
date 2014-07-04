@@ -136,7 +136,7 @@ After this, to trigger the use case you just need to hit the local HTTP endpoint
 
 ## Running on CloudHub <a name="runoncloudhub"/>
 While [creating your application on CloudHub](http://www.mulesoft.org/documentation/display/current/Hello+World+on+CloudHub) (Or you can do it later as a next step), you need to go to Deployment > Advanced to set all environment variables detailed in **Properties to be configured** as well as the **mule.env**.
-Once your app is all set and started, supposing you choose as domain name `template-sfdc2sieb-contact-aggregation` to trigger the use case you just need to hit `http://template-sfdc2sieb-contact-aggregation.cloudhub.io/synccontacts` and report will be sent to the emails configured.
+Once your app is all set and started, supposing you choose as domain name `template-sfdc2sieb-contact-aggregation` to trigger the use case you just need to hit `http://template-sfdc2sieb-contact-aggregation.cloudhub.io/generatereport` and report will be sent to the emails configured.
 
 ### Deploying your Anypoint Template on CloudHub <a name="deployingyouranypointtemplateoncloudhub"/>
 Mule Studio provides you with really easy way to deploy your Template directly to CloudHub, for the specific steps to do so please check this [link](http://www.mulesoft.org/documentation/display/current/Deploying+Mule+Applications#DeployingMuleApplications-DeploytoCloudHub)
