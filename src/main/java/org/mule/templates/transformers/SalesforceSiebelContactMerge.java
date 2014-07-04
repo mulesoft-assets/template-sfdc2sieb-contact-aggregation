@@ -95,7 +95,7 @@ public class SalesforceSiebelContactMerge extends AbstractMessageTransformer {
 
 	private Map<String, String> createContactListFromSiebel(Map<String, String> contact) {
 		Map<String, String> mergedContact = new HashMap<String, String>();
-		mergedContact.put("Name", contact.get("First Name") + contact.get("Last Name"));
+		mergedContact.put("Name", contact.get("First Name") + " " + contact.get("Last Name"));
 		mergedContact.put("Email", contact.get("Email Address"));
 		mergedContact.put("IDInA", "");
 		mergedContact.put("IDInB", "");

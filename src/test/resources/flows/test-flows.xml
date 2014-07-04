@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:siebel="http://www.mulesoft.org/schema/mule/siebel" xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" 
+xmlns:json="http://www.mulesoft.org/schema/mule/json" 
+xmlns="http://www.mulesoft.org/schema/mule/core" 
+xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" 
+xmlns:spring="http://www.springframework.org/schema/beans" 
+version="EE-3.5.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/siebel/current/mule-siebel.xsd">
+
+    <sub-flow name="createContactInSalesforce" doc:name="createContactInSalesforce">
+        <sfdc:create config-ref="Salesforce" type="Contact" doc:name="Salesforce">
+            <sfdc:objects ref="#[payload]"/>
+        </sfdc:create>
+    </sub-flow>
+
+    <sub-flow name="createContactInSiebel" doc:name="createContactInSiebel">
+        <siebel:create-business-component config-ref="OracleSiebelBusinessObjects" businessObjectComponentType="Contact.Contact" doc:name="Oracle Siebel Business Objects">
+            <siebel:business-component-fields ref="#[payload]"/>
+        </siebel:create-business-component>
+    </sub-flow>    
+
+    <sub-flow name="deleteContactFromSalesforce" doc:name="deleteContactFromSalesforce">
+        <sfdc:delete config-ref="Salesforce" doc:name="Salesforce">
+            <sfdc:ids ref="#[payload]"/>
+        </sfdc:delete>
+    </sub-flow>
+
+	<sub-flow name="deleteContactFromSiebel" doc:name="deleteContactFromSiebel">
+		<foreach doc:name="For Each">
+			<siebel:delete-business-component
+				config-ref="OracleSiebelBusinessObjects" businessComponentId="#[payload]"
+				businessObjectComponentType="Contact.Contact" doc:name="Oracle Siebel Business Objects" />
+		</foreach>
+	</sub-flow>
+    
+</mule>
