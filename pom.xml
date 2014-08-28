@@ -11,7 +11,7 @@
 
 	<artifactId>template-sfdc2sieb-contact-aggregation</artifactId>
 	<packaging>mule</packaging>
-	<version>1.0.1</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<name>template-sfdc2sieb-contact-aggregation Anypoint Template Project</name>
 
 	<properties>
