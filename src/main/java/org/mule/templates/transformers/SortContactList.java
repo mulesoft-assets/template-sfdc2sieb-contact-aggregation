@@ -15,6 +15,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
+import org.mule.templates.utils.Utils;
 import org.mule.transformer.AbstractMessageTransformer;
 
 /**
@@ -63,14 +64,10 @@ public class SortContactList extends AbstractMessageTransformer {
 
 	};
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object transformMessage(MuleMessage message, String outputEncoding) throws TransformerException {
-
-		List<Map<String, String>> sortedContactsList = (List<Map<String, String>>) message.getPayload();
-
+		List<Map<String, String>> sortedContactsList = Utils.buildList(message.getPayload());
 		Collections.sort(sortedContactsList, recordComparator);
-
 		return sortedContactsList;
 
 	}

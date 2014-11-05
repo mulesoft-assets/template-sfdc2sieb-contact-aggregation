@@ -59,7 +59,7 @@ public class SalesforceSiebelContactMerge extends AbstractMessageTransformer {
 	 *            contacts from organization B
 	 * @return a list with the merged content of the to input lists
 	 */
-	private List<Map<String, String>> mergeList(List<Map<String, String>> contactsFromOrgA, List<Map<String, String>> contactsFromOrgB) {
+	public List<Map<String, String>> mergeList(List<Map<String, String>> contactsFromOrgA, List<Map<String, String>> contactsFromOrgB) {
 		List<Map<String, String>> mergedContactsList = new ArrayList<Map<String, String>>();
 
 		// Put all contacts from A in the merged mergedContactsList

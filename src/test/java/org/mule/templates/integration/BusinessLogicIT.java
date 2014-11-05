@@ -8,6 +8,7 @@ package org.mule.templates.integration;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -148,20 +149,13 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 	@Test
 	public void testGatherDataFlow() throws Exception {
 		SubflowInterceptingChainLifecycleWrapper flow = getSubFlow("gatherDataFlow");
+		flow.setMuleContext(muleContext);
 		flow.initialise();
+		flow.start();
 
 		MuleEvent event = flow.process(getTestEvent("", MessageExchangePattern.REQUEST_RESPONSE));
-		Set<String> flowVariables = event.getFlowVariableNames();
-
-		Assert.assertTrue("The variable contactsFromSalesforce is missing.", flowVariables.contains(CONTACTS_FROM_SALESFORCE));
-		Assert.assertTrue("The variable contactsFromSiebel is missing.", flowVariables.contains(CONTACTS_FROM_SIEBEL));
-
-		ConsumerIterator<Map<String, String>> contactsFromSalesforce = event.getFlowVariable(CONTACTS_FROM_SALESFORCE);
-		List<Map<String, String>> contactsFromSiebel = event.getFlowVariable(CONTACTS_FROM_SIEBEL);
-
-		Assert.assertTrue("There should be contacts in the variable contactsFromSalesforce.",	contactsFromSalesforce.size() != 0);
-		Assert.assertTrue("There should be contacts in the variable contactsFromSiebel.",	contactsFromSiebel.size() != 0);
-
+		Iterator<Map<String, String>> mergedList = (Iterator<Map<String, String>>)event.getMessage().getPayload();
+		Assert.assertTrue("There should be contacts from source A or source B.", mergedList.hasNext());
 	}
 
 }
