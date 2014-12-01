@@ -24,7 +24,7 @@ import org.mule.api.transformer.TransformerException;
 
 @SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
-public class SortContactsListTest {
+public class SortContactsListIT {
 	@Mock
 	private MuleContext muleContext;
 

@@ -24,7 +24,7 @@ import org.mule.api.transformer.TransformerException;
 
 @SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
-public class SalesforceSiebelContactMergeTest {
+public class SalesforceSiebelContactMergeIT {
 	private static final String QUERY_SALESFORCE = "contactsFromSalesforce";
 	private static final String QUERY_SIEBEL = "contactsFromSiebel";
 
