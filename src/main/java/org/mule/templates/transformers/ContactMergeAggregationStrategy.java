@@ -7,8 +7,6 @@
 package org.mule.templates.transformers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +50,7 @@ public class ContactMergeAggregationStrategy implements AggregationStrategy {
 		return new DefaultMuleEvent(muleMessage, muleEvent);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private List<Map<String, String>> getAccountsList(List<MuleEvent> events, int index) {
 		List<Map<String, String>> list = new ArrayList<Map<String,String>>();
 		if(events.get(index).getMessage().getPayload() instanceof ConsumerIterator){

@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -22,7 +21,6 @@ import org.mule.MessageExchangePattern;
 import org.mule.api.MuleEvent;
 import org.mule.modules.siebel.api.model.response.CreateResult;
 import org.mule.processor.chain.SubflowInterceptingChainLifecycleWrapper;
-import org.mule.streaming.ConsumerIterator;
 import org.mule.tck.junit4.rule.DynamicPort;
 import org.mule.templates.builders.SfdcObjectBuilder;
 
@@ -146,6 +144,7 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testGatherDataFlow() throws Exception {
 		SubflowInterceptingChainLifecycleWrapper flow = getSubFlow("gatherDataFlow");

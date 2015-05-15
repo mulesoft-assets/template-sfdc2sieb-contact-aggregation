@@ -13,6 +13,8 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -22,11 +24,12 @@ import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({ "unchecked", "deprecation" })
 @RunWith(MockitoJUnitRunner.class)
 public class SalesforceSiebelContactMergeIT {
 	private static final String QUERY_SALESFORCE = "contactsFromSalesforce";
 	private static final String QUERY_SIEBEL = "contactsFromSiebel";
+	private static final Logger LOGGER = LogManager.getLogger(SalesforceSiebelContactMergeIT.class);
 
 	@Mock
 	private MuleContext muleContext;
@@ -43,7 +46,7 @@ public class SalesforceSiebelContactMergeIT {
 		SalesforceSiebelContactMerge transformer = new SalesforceSiebelContactMerge();
 		List<Map<String, String>> mergedList = (List<Map<String, String>>) transformer.transform(message, "UTF-8");
 
-		System.out.println(mergedList);
+		LOGGER.info(mergedList);
 		Assert.assertEquals("The merged list obtained is not as expected", createExpectedList(), mergedList);
 	}
 
@@ -61,7 +64,7 @@ public class SalesforceSiebelContactMergeIT {
 		SalesforceSiebelContactMerge transformer = new SalesforceSiebelContactMerge();
 		List<Map<String, String>> mergedList = (List<Map<String, String>>) transformer.transform(message, "UTF-8");
 
-		System.out.println(mergedList);
+		LOGGER.info(mergedList);
 
 		List<Map<String, String>> expectedList = createExpectedList();
 		expectedList.get(0).put("Email", null);

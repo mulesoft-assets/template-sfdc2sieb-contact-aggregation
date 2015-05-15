@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <configuration>
 	<placeholders>
-		<placeholder id="template_name">Salesforce to Siebel Contact Aggregation</placeholder>
+		<placeholder id="template_name">Salesforce and Siebel Contact Aggregation</placeholder>
 	</placeholders>
 	<sections>
 		<section id="use_case">
 			<![CDATA[
-I want to aggregate contacts from Salesforce to Oracle Siebel Business Objects (Siebel) and compare them to see which contacts can only be found in one of the two and which contacts are in both instances. 
+I want to aggregate contacts from Salesforce and Oracle Siebel Business Objects (Siebel), compare them to see which contacts can only be found in one of the two and which contacts are in both instances. 
 
 For practical purposes this Template will generate the result in the format of a CSV Report sent by mail.
 
@@ -117,7 +117,7 @@ $H$H# Format Output Flow
 
 1. Contacts only in Salesforce
 2. Contacts only in Siebel
-3. Contacts in both Salesforce and Org B
+3. Contacts in both Salesforce and Siebel
 
 All records ordered alphabetically by mail within each category.
 If you want to change this order then the *compare* method should be modified.
