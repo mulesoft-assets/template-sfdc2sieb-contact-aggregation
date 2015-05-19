@@ -153,18 +153,18 @@ In order to use this Mule Anypoint Template you need to configure properties (Cr
 + http.port `9090` 
 
 ### Salesforce Connector configuration
-+ sfdc.username=bob.dylan@sfdc
-+ sfdc.password=DylanPassword123
-+ sfdc.securityToken=avsfwCUl7apQs56Xq2AKi3X
-+ sfdc.url=https://test.salesforce.com/services/Soap/u/28.0
++ sfdc.username `bob.dylan@sfdc`
++ sfdc.password `DylanPassword123`
++ sfdc.securityToken `avsfwCUl7apQs56Xq2AKi3X`
++ sfdc.url `https://login.salesforce.com/services/Soap/u/32.0`
 
 ### Oracle Siebel Connector configuration
-+ sieb.user=`user`
-+ sieb.password=`secret`
-+ sieb.server=`server`
-+ sieb.serverName=`serverName`
-+ sieb.objectManager=`objectManager`
-+ sieb.port=`2321`
++ sieb.user `user`
++ sieb.password `secret`
++ sieb.server `server`
++ sieb.serverName `serverName`
++ sieb.objectManager `objectManager`
++ sieb.port `2321`
 
 ### SMPT Services configuration
 + smtp.host `smtp.gmail.com`
