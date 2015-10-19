@@ -26,13 +26,13 @@ Note that using this template is subject to the conditions of this [License Agre
 Please review the terms of the license before downloading and using this template. In short, you are allowed to use the template for free with Mule ESB Enterprise Edition, CloudHub, or as a trial in Anypoint Studio.
 
 # Use Case <a name="usecase"/>
-I want to aggregate contacts from Salesforce and Oracle Siebel Business Objects (Siebel), compare them to see which contacts can only be found in one of the two and which contacts are in both instances. 
+I want to aggregate contacts from Salesforce and Oracle Siebel Business Objects (Siebel), compare them to see what contacts can only be found in one of the two and what contacts are in both instances. 
 
-For practical purposes this Template will generate the result in the format of a CSV Report sent by mail.
+For practical purposes this Template will generate the result in the format of a CSV Report sent by email.
 
 This Template should serve as a foundation for extracting data from two systems, aggregating data, comparing values of fields for the objects, and generating a report on the differences. 
 
-As implemented, it gets contacts from Salesforce and Siebel, compares by the email address of the contacts, and generates a CSV file which shows contact in Salesforce, contact in Siebel, and contacts in Salesforce and Siebel. The report is then emailed to a configured group of email addresses.
+As implemented, it gets contacts from Salesforce and Siebel, compares them by the email address of the contacts, and generates a CSV file which shows contacts in Salesforce, contacts in Siebel, and contacts in both Salesforce and Siebel. The report is then emailed to a configured group of email addresses.
 
 # Considerations <a name="considerations"/>
 
@@ -137,7 +137,7 @@ Once you have imported you Anypoint Template into Anypoint Studio you need to fo
 
 ### Running on Mule ESB stand alone <a name="runonmuleesbstandalone"/>
 Complete all properties in one of the property files, for example in [mule.prod.properties] (../master/src/main/resources/mule.prod.properties) and run your app with the corresponding environment variable to use it. To follow the example, this will be `mule.env=prod`. 
-After this, to trigger the use case you just need to hit the local HTTP endpoint with the port you configured in your file. If this is, for instance, `9090` then you should hit: `http://localhost:9090/generatereport` and this will create a CSV report and send it to the mails set.
+After this, to trigger the use case you just need to hit the local HTTP listener with the port you configured in your file. If this is, for instance, `9090` then you should hit: `http://localhost:9090/generatereport` and this will create a CSV report and send it to the mails set.
 
 ## Running on CloudHub <a name="runoncloudhub"/>
 While [creating your application on CloudHub](http://www.mulesoft.org/documentation/display/current/Hello+World+on+CloudHub) (Or you can do it later as a next step), you need to go to Deployment > Advanced to set all environment variables detailed in **Properties to be configured** as well as the **mule.env**.
@@ -166,7 +166,7 @@ In order to use this Mule Anypoint Template you need to configure properties (Cr
 + sieb.objectManager `objectManager`
 + sieb.port `2321`
 
-### SMPT Services configuration
+### SMTP Services configuration
 + smtp.host `smtp.gmail.com`
 + smtp.port `587`
 + smtp.user `exampleuser@gmail.com`
@@ -203,7 +203,7 @@ In the visual editor they can be found on the *Global Element* tab.
 
 
 ## businessLogic.xml<a name="businesslogicxml"/>
-Functional aspect of the Template is implemented on this XML, directed by one flow responsible of conducting the aggregation of data, comparing records and finally formating the output, in this case being a report.
+Functional aspect of the Template is implemented on this XML, directed by one flow responsible for conducting the aggregation of data, comparing records and finally formating the output, in this case a CSV report.
 The *mainFlow* organises the job in three different steps and finally invokes the *outboundFlow* that will deliver the report to the corresponding outbound endpoint.
 This flow has Exception Strategy that basically consists on invoking the *defaultChoiseExceptionStrategy* defined in *errorHandling.xml* file.
 
@@ -233,10 +233,10 @@ If you want to change this order then the *compare* method should be modified.
 
 ## endpoints.xml<a name="endpointsxml"/>
 This is the file where you will found the inbound and outbound sides of your integration app.
-This Template has an [HTTP Inbound Endpoint](http://www.mulesoft.org/documentation/display/current/HTTP+Endpoint+Reference) as the way to trigger the use case and an [SMTP Transport](http://www.mulesoft.org/documentation/display/current/SMTP+Transport+Reference) as the outbound way to send the report.
+This Template has an [HTTP Listener Connector](http://www.mulesoft.org/documentation/display/current/HTTP+Connector) as the way to trigger the use case and an [SMTP Transport](http://www.mulesoft.org/documentation/display/current/SMTP+Transport+Reference) as the outbound way to send the report.
 
 ### Trigger Flow
-**HTTP Inbound Endpoint** - Start Report Generation
+**HTTP Listener Connector** - Start Report Generation
 + `${http.port}` is set as a property to be defined either on a property file or in CloudHub environment variables.
 + The path configured by default is `generatereport` and you are free to change for the one you prefer.
 + The host name for all endpoints in your CloudHub configuration should be defined as `localhost`. CloudHub will then route requests from your application domain URL to the endpoint.

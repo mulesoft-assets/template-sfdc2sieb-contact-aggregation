@@ -11,17 +11,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Assert;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
+import org.mule.api.config.MuleConfiguration;
 import org.mule.api.transformer.TransformerException;
 
 @SuppressWarnings({ "unchecked", "deprecation" })
@@ -33,12 +34,18 @@ public class SalesforceSiebelContactMergeIT {
 
 	@Mock
 	private MuleContext muleContext;
+	
+	@Mock
+	private MuleConfiguration muleConfiguration;
 
 	@Test
 	public void testMerge() throws TransformerException {
 		List<Map<String, String>> salesforceContacts = createSalesforceContactLists("SF", 0, 1);
 		List<Map<String, String>> siebelContacts = createSiebelContactLists("Siebel", 1, 2);
 
+		Mockito.when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
+		Mockito.when(muleConfiguration.getDefaultEncoding()).thenReturn("UTF-8");
+		
 		MuleMessage message = new DefaultMuleMessage(null, muleContext);
 		message.setInvocationProperty(QUERY_SALESFORCE, salesforceContacts.iterator());
 		message.setInvocationProperty(QUERY_SIEBEL, siebelContacts);
@@ -57,6 +64,9 @@ public class SalesforceSiebelContactMergeIT {
 
 		List<Map<String, String>> siebelContacts = createSiebelContactLists("Siebel", 1, 2);
 
+		Mockito.when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
+		Mockito.when(muleConfiguration.getDefaultEncoding()).thenReturn("UTF-8");
+		
 		MuleMessage message = new DefaultMuleMessage(null, muleContext);
 		message.setInvocationProperty(QUERY_SALESFORCE, salesforceContacts.iterator());
 		message.setInvocationProperty(QUERY_SIEBEL, siebelContacts);
