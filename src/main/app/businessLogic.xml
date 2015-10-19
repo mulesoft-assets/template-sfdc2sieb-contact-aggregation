@@ -26,29 +26,19 @@ This flow should control the direction of the application, and it should be call
     <flow name="gatherDataFlow">
         <scatter-gather doc:name="Scatter-Gather">
             <custom-aggregation-strategy class="org.mule.templates.transformers.ContactMergeAggregationStrategy"/>
-            <processor-chain>
-                <logger message="BEFORE SFDC" level="INFO" doc:name="Logger"/>
-                <sfdc:query config-ref="Salesforce" query="dsql:SELECT Name, Email, Id  FROM Contact" doc:name="query all contacts from Salesforce"/>
-                <logger message="AFTER SFDC" level="INFO" doc:name="Logger"/>
-            </processor-chain>
-            <processor-chain>
-                <logger message="BEFORE SIEBEL" level="INFO" doc:name="Logger"/>
-                <siebel:query-business-components config-ref="Oracle_Siebel_Business_Objects__Configuration" businessObjectComponentType="Contact.Contact" doc:name="query all contacts from Siebel">
-                    <siebel:fields-to-retrieve>
-                        <siebel:fields-to-retrieve>Id</siebel:fields-to-retrieve>
-                        <siebel:fields-to-retrieve>Email Address</siebel:fields-to-retrieve>
-                        <siebel:fields-to-retrieve>First Name</siebel:fields-to-retrieve>
-                        <siebel:fields-to-retrieve>Last Name</siebel:fields-to-retrieve>
-                    </siebel:fields-to-retrieve>
-                </siebel:query-business-components>
-                <logger message="AFTER SIEBEL" level="INFO" doc:name="Logger"/>
-            </processor-chain>
+            <sfdc:query config-ref="Salesforce" query="dsql:SELECT Name, Email, Id  FROM Contact" doc:name="query all contacts from Salesforce"/>
+            <siebel:query-business-components config-ref="Oracle_Siebel_Business_Objects__Configuration" businessObjectComponentType="Contact.Contact" doc:name="query all contacts from Siebel">
+                <siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Id</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Email Address</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>First Name</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Last Name</siebel:fields-to-retrieve>
+                </siebel:fields-to-retrieve>
+            </siebel:query-business-components>
         </scatter-gather>
     </flow>
     <flow name="formatOutputFlow">
-        <logger message="BEFORE SORTING" level="INFO" doc:name="Logger"/>
         <custom-transformer class="org.mule.templates.transformers.SortContactList" doc:name="custom component to sort contact list"/>
-        <logger message="AFTER SORTING" level="INFO" doc:name="Logger"/>
         <dw:transform-message doc:name="Maps to CSV">
             <dw:set-payload><![CDATA[%dw 1.0
 %output application/csv header=true
