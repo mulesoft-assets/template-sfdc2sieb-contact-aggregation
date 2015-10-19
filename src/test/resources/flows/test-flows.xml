@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:siebel="http://www.mulesoft.org/schema/mule/siebel" 
+<mule xmlns:spring="http://www.springframework.org/schema/beans" 
+xmlns:siebel="http://www.mulesoft.org/schema/mule/siebel" 
 xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" 
 xmlns:json="http://www.mulesoft.org/schema/mule/json" 
 xmlns="http://www.mulesoft.org/schema/mule/core" 
 xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" 
-version="EE-3.6.2" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
 http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
-http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/siebel/current/mule-siebel.xsd">
+http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/siebel/current/mule-siebel.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd">
 
     <sub-flow name="createContactInSalesforce" >
         <sfdc:create config-ref="Salesforce" type="Contact" doc:name="salesforce">
@@ -19,7 +20,7 @@ http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/s
     </sub-flow>
 
     <sub-flow name="createContactInSiebel" >
-        <siebel:create-business-component config-ref="OracleSiebelBusinessObjects" businessObjectComponentType="Contact.Contact" doc:name="oracle Siebel Business Objects">
+        <siebel:create-business-component config-ref="Oracle_Siebel_Business_Objects__Configuration" businessObjectComponentType="Contact.Contact" doc:name="oracle Siebel Business Objects">
             <siebel:business-component-fields ref="#[payload]"/>
         </siebel:create-business-component>
     </sub-flow>    
@@ -33,7 +34,7 @@ http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/s
 	<sub-flow name="deleteContactFromSiebel" >
 		<foreach doc:name="For Each">
 			<siebel:delete-business-component
-				config-ref="OracleSiebelBusinessObjects" businessComponentId="#[payload]"
+				config-ref="Oracle_Siebel_Business_Objects__Configuration" businessComponentId="#[payload]"
 				businessObjectComponentType="Contact.Contact" doc:name="oracle Siebel Business Objects" />
 		</foreach>
 	</sub-flow>

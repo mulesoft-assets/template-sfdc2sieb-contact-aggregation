@@ -19,6 +19,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleEvent;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.modules.siebel.api.model.response.CreateResult;
 import org.mule.processor.chain.SubflowInterceptingChainLifecycleWrapper;
 import org.mule.tck.junit4.rule.DynamicPort;
@@ -35,42 +36,53 @@ import com.sforce.soap.partner.SaveResult;
 public class BusinessLogicIT extends AbstractTemplateTestCase {
 	protected static final String TEMPLATE_NAME = "contact-aggregation";
 
-	private static final String CONTACTS_FROM_SALESFORCE = "contactsFromSalesforce";
-	private static final String CONTACTS_FROM_SIEBEL = "contactsFromSiebel";
-
 	private List<Map<String, Object>> createdContactsInSalesforce = new ArrayList<Map<String, Object>>();
 	private List<Map<String, Object>> createdContactsInSiebel = new ArrayList<Map<String, Object>>();
-
+	
+	private SubflowInterceptingChainLifecycleWrapper createContactInSalesforceSubflow;
+	private SubflowInterceptingChainLifecycleWrapper createContactInSiebelSubflow;
+	private SubflowInterceptingChainLifecycleWrapper deleteContactFromSalesforceSubflow;
+	private SubflowInterceptingChainLifecycleWrapper deleteContactFromSiebelSubflow;
+	
+	
 	@Rule
 	public DynamicPort port = new DynamicPort("http.port");
 
 	@Before
 	public void setUp() throws Exception {
-
+		initializeSubflows();
 		createContacts();
+	}
+
+	private void initializeSubflows() throws InitialisationException {
+		createContactInSalesforceSubflow = getSubFlow("createContactInSalesforce");
+		createContactInSalesforceSubflow.initialise();
+		
+		createContactInSiebelSubflow = getSubFlow("createContactInSiebel");
+		createContactInSiebelSubflow.initialise();
+		
+		deleteContactFromSalesforceSubflow = getSubFlow("deleteContactFromSalesforce");
+		deleteContactFromSalesforceSubflow.initialise();
+		
+		deleteContactFromSiebelSubflow  = getSubFlow("deleteContactFromSiebel");
+		deleteContactFromSiebelSubflow.initialise();
 	}
 
 	@SuppressWarnings("unchecked")
 	private void createContacts() throws Exception {
-		SubflowInterceptingChainLifecycleWrapper flow = getSubFlow("createContactInSalesforce");
-		flow.initialise();
-
 		Map<String, Object> contact = createContact("SF", 0);
 		createdContactsInSalesforce.add(contact);
 
-		MuleEvent event = flow.process(getTestEvent(createdContactsInSalesforce,	MessageExchangePattern.REQUEST_RESPONSE));
+		MuleEvent event = createContactInSalesforceSubflow.process(getTestEvent(createdContactsInSalesforce,	MessageExchangePattern.REQUEST_RESPONSE));
 		List<SaveResult> results = (List<SaveResult>) event.getMessage().getPayload();
 		for (int i = 0; i < results.size(); i++) {
 			createdContactsInSalesforce.get(i).put("Id", results.get(i).getId());
 		}
 
-		flow = getSubFlow("createContactInSiebel");
-		flow.initialise();
-
 		contact = createSiebelContact("Siebel", 0);
 		createdContactsInSiebel.add(contact);
 
-		event = flow.process(getTestEvent(contact, MessageExchangePattern.REQUEST_RESPONSE));
+		event = createContactInSiebelSubflow.process(getTestEvent(contact, MessageExchangePattern.REQUEST_RESPONSE));
 		CreateResult cr = (CreateResult) event.getMessage().getPayload();
 		contact.put("Id", cr.getCreatedObjects().get(0));
 	}
@@ -122,37 +134,28 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
 
 	@After
 	public void tearDown() throws Exception {
-
-		deleteTestContactFromSandBox(createdContactsInSalesforce, "deleteContactFromSalesforce");
-		deleteTestContactFromSandBox(createdContactsInSiebel, "deleteContactFromSiebel");
+		deleteTestContactFromSandbox(createdContactsInSalesforce, deleteContactFromSalesforceSubflow);
+		deleteTestContactFromSandbox(createdContactsInSiebel, deleteContactFromSiebelSubflow);
 
 	}
 
-	protected void deleteTestContactFromSandBox(List<Map<String, Object>> createdContacts, String deleteFlow)
+	protected void deleteTestContactFromSandbox(List<Map<String, Object>> createdContacts, SubflowInterceptingChainLifecycleWrapper flow)
 			throws Exception {
 		List<String> idList = new ArrayList<String>();
 
-		// Delete the created contacts in Salesforce
-		SubflowInterceptingChainLifecycleWrapper flow = getSubFlow(deleteFlow);
-		flow.initialise();
-
+		// Delete the created contacts in Salesforce / Siebel
 		for (Map<String, Object> c : createdContacts) {
 			idList.add((String) c.get("Id"));
 		}
 		flow.process(getTestEvent(idList, MessageExchangePattern.REQUEST_RESPONSE));
 		idList.clear();
-
 	}
+	
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testGatherDataFlow() throws Exception {
-		SubflowInterceptingChainLifecycleWrapper flow = getSubFlow("gatherDataFlow");
-		flow.setMuleContext(muleContext);
-		flow.initialise();
-		flow.start();
-
-		MuleEvent event = flow.process(getTestEvent("", MessageExchangePattern.REQUEST_RESPONSE));
+		MuleEvent event = runFlow("gatherDataFlow");
 		Iterator<Map<String, String>> mergedList = (Iterator<Map<String, String>>)event.getMessage().getPayload();
 		Assert.assertTrue("There should be contacts from source A or source B.", mergedList.hasNext());
 	}
