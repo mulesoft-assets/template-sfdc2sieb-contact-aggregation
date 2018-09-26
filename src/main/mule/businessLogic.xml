@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:siebel="http://www.mulesoft.org/schema/mule/siebel"
+      xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:email="http://www.mulesoft.org/schema/mule/email"
+xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/siebel/current/mule-siebel.xsd">
+    <flow name="businesslogicFlow">
+        <scatter-gather doc:name="Scatter-Gather">
+            <route>
+                <salesforce:query doc:name="query all contacts from Salesforce" doc:id="6ccfdf88-5001-49d3-9774-bd73c9431e58" config-ref="Salesforce_Config">
+					<salesforce:salesforce-query >SELECT Name, Email, Id  FROM Contact</salesforce:salesforce-query>
+				</salesforce:query>
+            </route>
+            <route>
+				<siebel:query-business-components businessObjectComponentType="Contact.Contact" doc:name="query all contacts from Siebel" doc:id="422ddd09-3216-4b8e-9dfd-6a818e5c1d3c" config-ref="Siebel_JDB_Siebel">
+					<siebel:query-definition ><![CDATA[#[{
+	"fields" : ["Id", "First Name", "Last Name", "Email Address"]
+}]]]></siebel:query-definition>
+				</siebel:query-business-components>
+            </route>
+        </scatter-gather>
+		<ee:transform doc:name="Aggregate results and transform to CSV" doc:id="443a7a59-8e38-4e0e-940c-7a5d37dfef54">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/csv separator=","
+import mergeWith from dw::core::Objects
+var sfdcContacts = payload["0"].payload map (item) -> {
+	"IDInA": item.Id,
+	"Name": item.Name,
+	"Email": item.Email
+}
+var siebelContacts = payload["1"].payload map (item) -> {
+	"IDInB": item.Id,
+	"Name": (item."First Name" ++ " " ++ item."Last Name"),
+	"Email": item."Email Address"
+}
+var mergedItems =  (
+                sfdcContacts map ((contact) -> contact mergeWith ((siebelContacts filter ($.Email == contact.Email))[0]
+                    default {IDInB: ""}
+                ))
+            ) distinctBy $.Email
+            ++ (
+                siebelContacts map ((contact) -> contact mergeWith ((sfdcContacts filter ($.Email == contact.Email))[0]
+                    default {IDInA: ""}
+                ))
+            ) distinctBy $.Email
+fun sortBySourceExistence (contacts) = ((contacts map (contact) -> (
+        contact ++ {
+            sortValue:  if ((contact.IDInA != "") and (contact.IDInB == "")) 1
+                        else if ((contact.IDInB != "") and (contact.IDInA == "")) 2
+                        else 3
+        }
+    )
+) orderBy $.sortValue ) map $ -"sortValue"
+---
+sortBySourceExistence(mergedItems) map (contact) -> {
+	"Name": contact.Name,
+	"Email": contact.Email,
+	"IDInA": contact.IDInA,
+	"IDInB": contact.IDInB
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <email:send config-ref="Gmail_SMTP" doc:name="Send migration result email" fromAddress="${mail.from}"
+                    subject="${mail.subject}">
+            <email:to-addresses>
+                <email:to-address value="${mail.to}"/>
+            </email:to-addresses>
+            <email:body contentType="text/plain">
+                <email:content><![CDATA[${mail.body}]]></email:content>
+            </email:body>
+            <email:attachments><![CDATA[#[{'${attachment.name}' : payload}]]]></email:attachments>
+
+        </email:send>
+    </flow>
+    <flow name="mainFlow">
+        <flow-ref doc:name="Call businesslogicFlow" name="businesslogicFlow"/>
+        <error-handler>
+            <on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" type="ANY">
+                <flow-ref doc:name="errorHandlingFlow" name="errorHandlingFlow"/>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+
+</mule>
+
+        
