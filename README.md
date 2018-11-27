@@ -13,7 +13,7 @@ I want to aggregate contacts from Salesforce and Oracle Siebel Business Objects 
 
 For practical purposes this Template will generate the result in the format of a CSV Report sent by email.
 
-This Template should serve as a foundation for extracting data from two systems, aggregating data, comparing values of fields for the objects, and generating a report on the differences. 
+This template serves as a foundation for extracting data from two systems, aggregating data, comparing values of fields for the objects, and generating a report on the differences. 
 
 As implemented, it gets contacts from Salesforce and Siebel, compares them by the email address of the contacts, and generates a CSV file which shows contacts in Salesforce, contacts in Siebel, and contacts in both Salesforce and Siebel. The report is then emailed to a configured group of email addresses.
 <!-- Use Case (end) -->
@@ -24,7 +24,7 @@ As implemented, it gets contacts from Salesforce and Siebel, compares them by th
 <!-- Default Considerations (end) -->
 
 <!-- Considerations (start) -->
-To make this Anypoint Template run, there are certain preconditions that must be considered. All of them deal with the preparations in both, that must be made in order for all to run smoothly. **Failing to do so could lead to unexpected behavior of the template.**
+To make this template run, there are certain preconditions that must be considered. All of them deal with the preparations in both, that must be made for the template to run smoothly. **Failing to do so could lead to unexpected behavior of the template.**
 <!-- Considerations (end) -->
 
 
@@ -121,12 +121,12 @@ After you import your template into Anypoint Studio, follow these steps to run i
 
 ### Running on Mule Standalone
 Update the properties in one of the property files, for example in mule.prod.properties, and run your app with a corresponding environment variable. In this example, use `mule.env=prod`. 
-After this, to trigger the use case you just need to hit the local HTTP listener with the port you configured in your file. If this is, for instance, `9090` then you should hit: `http://localhost:9090/generatereport` and this will create a CSV report and send it to the mails set.
+After this, to trigger the use case you just need to browse to the local HTTP listener with the port you configured in your file. If this is, for instance, `9090` then you should browse to: `http://localhost:9090/generatereport` and this will create a CSV report and send it to the mails set.
 
 ## Running on CloudHub
 When creating your application in CloudHub, go to Runtime Manager > Manage Application > Properties to set the environment variables listed in "Properties to Configure" as well as the mule.env value.
 <!-- Running on Cloudhub (start) -->
-Once your app is all set and started, supposing you choose as domain name `template-sfdc2sieb-contact-aggregation` to trigger the use case you just need to hit `http://template-sfdc2sieb-contact-aggregation.cloudhub.io/generatereport` and report will be sent to the emails configured.
+Once your app is all set and started, supposing you choose as domain name `template-sfdc2sieb-contact-aggregation` to trigger the use case you just need to browse to `http://template-sfdc2sieb-contact-aggregation.cloudhub.io/generatereport` and report will be sent to the emails configured.
 <!-- Running on Cloudhub (end) -->
 
 ### Deploying a Template in CloudHub
@@ -163,8 +163,8 @@ To use this template, configure properties such as credentials, configurations, 
 ### Mail details
 + mail.from `exampleuser@gmail.com`
 + mail.to `woody.guthrie@gmail.com`
-+ mail.subject `SFDC Contacts Report`
-+ mail.body `Contacts report comparing contacts from SFDC and Siebel Contacts`
++ mail.subject `Salesforce Contacts Report`
++ mail.body `Contacts report comparing contacts from Salesforce and Siebel Contacts`
 + attachment.name `OrderedReport.csv`
 <!-- Application Configuration (end) -->
 
@@ -210,7 +210,7 @@ Contacts will be matched by email address, that is to say, a record in both orga
 
 ## endpoints.xml
 <!-- Default Endpoints XML (start) -->
-This is the file where you will found the endpoint to start the aggregation. This Template has an HTTP Inbound Endpoint as the way to trigger the use case.
+This file provides the endpoint to start the aggregation. This Template has an HTTP Inbound Endpoint as the way to trigger the use case.
 ### Trigger Flow
 **HTTP Inbound Endpoint** - Start Report Generation
 + `${http.port}` is set as a property to be defined either on a property file or in CloudHub environment variables.
