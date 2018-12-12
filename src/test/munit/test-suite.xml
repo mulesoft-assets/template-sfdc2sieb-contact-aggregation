@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<munit:config name="test-suite.xml" />
+	
+		<configuration-properties doc:name="Configuration properties"
+		file="mule.test.properties" />
+	<configuration-properties doc:name="Configuration properties"
+		file="common.properties" />
+
+	<munit:before-test name="test-suiteBefore_Test" description="Before tests actions" doc:id="bc805811-e724-4d5a-894b-feb20fa9db85" >
+		
+		<munit-tools:mock-when doc:name="Mock email processor to avoid sending email" doc:id="523b2079-200e-40eb-ab4e-c2056f9a834b" processor="email:send" >
+			<munit-tools:then-return />
+		</munit-tools:mock-when>
+	</munit:before-test>
+	<munit:test name="test-suiteTest" description="MUnit Test" doc:id="e87e8c07-0c76-485f-a560-ada3b78326a5" >
+		<munit:execution >
+			<flow-ref doc:name="Call businesslogicFlow" doc:id="7ef1e21b-4bdc-4e6e-ab10-ab2b3d787f18" name="businesslogicFlow"/>
+			<scripting:execute engine="groovy" doc:id="6861801f-7d44-43ed-954f-46d8cd98007a" doc:name="Sleep for 5s until the processing is completed">
+				<scripting:code>sleep(5000)</scripting:code>
+			</scripting:execute>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify call" doc:id="dd63e1e8-9d26-4e6d-a790-04ca2a8d6319" processor="salesforce:query" times="1"/>
+			<munit-tools:verify-call doc:name="Verify call" doc:id="7adef1ef-9c5b-4518-9e7e-ef322008ecee" processor="siebel:query-business-components" times="1"/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
