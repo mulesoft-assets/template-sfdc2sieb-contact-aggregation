@@ -17,8 +17,7 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 		file="mule.test.properties" />
 	<configuration-properties doc:name="Configuration properties"
 		file="common.properties" />
-	<configuration-properties doc:name="Configuration properties"
-		file="mule-artifact.properties" />
+
 	<munit:before-test name="test-suiteBefore_Test" description="Before tests actions" doc:id="bc805811-e724-4d5a-894b-feb20fa9db85" >
 		
 		<munit-tools:mock-when doc:name="Mock email processor to avoid sending email" doc:id="523b2079-200e-40eb-ab4e-c2056f9a834b" processor="email:send" >
