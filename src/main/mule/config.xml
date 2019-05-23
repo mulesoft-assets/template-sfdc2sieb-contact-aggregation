@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ns6="http://www.mulesoft.org/schema/mule/siebel" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/siebel/current/mule-siebel.xsd">
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:siebel="http://www.mulesoft.org/schema/mule/siebel" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/siebel/current/mule-siebel.xsd">
 
     <http:listener-config name="HTTP_Listener_config" doc:id="910654bf-9fd9-4073-bad4-cf951b7f0022" doc:name="HTTP Listener config">
         <http:listener-connection host="0.0.0.0" port="${http.port}" />
@@ -11,10 +11,10 @@
     <tls:context name="TLS_Context" doc:id="233e532c-8296-4ddd-ac67-e2b7984b3609" doc:name="TLS Context">
         <tls:trust-store insecure="true" />
     </tls:context>
-    
-   <ns6:siebel-config name="Siebel_JDB_Siebel" doc:id="ebeed293-0aea-432e-aa37-a69a0f7f3d74" doc:name="Siebel JDB Siebel">
-        <ns6:basic-connection objectManager="${sieb.objectManager}" password="${sieb.password}" port="${sieb.port}" server="${sieb.server}" serverName="${sieb.serverName}" user="${sieb.user}" />
-    </ns6:siebel-config>
+
+   <siebel:siebel-config name="Siebel_JDB_Siebel" doc:id="ebeed293-0aea-432e-aa37-a69a0f7f3d74" doc:name="Siebel JDB Siebel">
+        <siebel:basic-connection objectManager="${sieb.objectManager}" password="${sieb.password}" port="${sieb.port}" server="${sieb.server}" serverName="${sieb.serverName}" user="${sieb.user}" />
+    </siebel:siebel-config>
     <configuration-properties file="mule.${mule.env}.properties" doc:id="46877740-aac5-4812-8728-4718689aa9ec" doc:name="Configuration properties" />
     <configuration-properties file="common.properties" doc:id="dffa4da7-cc5c-4ecb-922e-1115b4387354" doc:name="Configuration properties" />
     <configuration-properties file="mule-artifact.properties" doc:id="d185e6c2-8ca4-4217-928b-a845563af693" doc:name="Configuration properties" />
